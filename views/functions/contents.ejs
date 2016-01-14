@@ -1,0 +1,71 @@
+<%
+
+
+
+var main = [['train', '军事训练'],
+    ['education', '教育管理'],
+    ['defence', '国防动员']
+];
+
+var train = [['plan', '通知计划'],
+    ['rule', '训练法规'],
+    ['search', '资料查询'],
+    ['exam', '训练考核']
+];
+
+var education = [['plan', '通知计划'],
+    ['edu', '教育资料'],
+    ['rule', '法规命令'],
+    ['achieve', '成果交流']
+];
+
+var defence = [['organization', '组织机构'],
+    ['rule', '法规政策'],
+    ['call', '兵员征集'],
+    ['potential', '基本潜力']
+];
+
+getCategories = function(){
+    return main;
+}
+
+getSubCategories = function(category){
+    if(category === 'train')
+        return train;
+    else if(category === 'education')
+        return education;
+    else if(category === 'defence')
+        return defence;
+}
+
+getChCategory = function(category){
+    var ch_category;
+    for(var i = 0 ; i < main.length; i++){
+        if(category === main[i][0]){
+            ch_category = main[i][1];
+            break;
+        }
+    }
+    return ch_category;
+}
+
+getChSubCategory = function(category,sub_category){
+    var ch_sub_category;
+    var select;
+    if(category === 'train'){
+        select = train;
+    }else if(category === 'education'){
+        select = education;
+    }else if(category === 'defence'){
+        select = defence;
+
+    }
+    for(var i = 0 ; i < select.length; i++){
+        if(sub_category === select[i][0]){
+            ch_sub_category = select[i][1];
+            break;
+        }
+    }
+    return ch_sub_category;
+}
+ %>

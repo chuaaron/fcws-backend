@@ -1,0 +1,43 @@
+<div id="modal_show_content" class="modal fade " role="dialog" aria-labelledby="文档详情">
+    <div class="modal-dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">文档详情</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script>
+    $(function () {
+        $('#modal_show_content').on('show.bs.modal', function (event) {
+            var detail = $(this).data('detail');
+            console.log(detail);
+            var htmlcontent = detail;
+            if(detail){
+                htmlcontent =  markdown.toHTML(detail);
+            }
+            console.log(htmlcontent);
+
+//            alert(htmlcontent);
+            $('#modal_show_content .modal-dialog .modal-content .modal-body ').empty().append(htmlcontent);
+            $('#modal_show_content .modal-dialog .modal-content .modal-body img').css({
+                'width':'100%'
+            });
+
+        })
+
+        $('.markdown_render').on('click', function (e) {
+            e.preventDefault();
+            var detail= $(this).data('detail');
+            $('#modal_show_content').data('detail', detail).modal('show');
+        });
+    });
+</script>

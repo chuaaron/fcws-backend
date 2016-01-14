@@ -1,0 +1,79 @@
+<% include header %>
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="page-header">
+                <h1>
+                    <% if(typeof(action) !== 'undefined' && action === 'edit'){ %>
+                    编辑子区域
+                    <% } else { %>
+                    新增子区域
+                    <% } %>
+                </h1>
+            </div>
+
+            <% if (typeof(action) !== 'undefined' && action === 'edit') { %>
+            <form id="town_form" method="post"
+                  action='/towns/<%= town %>/update?district=<%= district %>'>
+                <% } else { %>
+                <form id="town_form" method="post"
+                      action='/towns/create'>
+                    <% } %>
+
+                    <div class="form-group">
+                        <label for="district" class="control-label" id="district_selector">区域</label>
+                        <select class="form-control" name="district" id="select_district"
+                                <%= typeof(district) !== 'undefined'?"disabled='true'" : '' %>
+                        >
+                            <option value="">请选择...</option>
+                            <%
+                            var tabValue;
+                            if (typeof(district) !== 'undefined') {
+                                tabValue = district;
+                            }
+                            districts.forEach(function (district) {
+                                var value = district.name;
+                                var text = district.name;
+                            %>
+                            <option value="<%= value %>" <%= tabValue === value ? 'selected' : '' %>><%= text %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="town" class="control-label">子区域名</label>
+                        <input class="form-control" id="town" name="town"
+                               value="<%= typeof(town) !== 'undefined' && town || '' %>">
+                    </div>
+                    <div class="form-group pull-right">
+                        <button type="submit" class="btn btn-primary" id="submit_btn">提交</button>
+                        <button type="button" class="btn btn-default" name="back"
+                                onclick="javascript:history.back(-1);"/>
+                        取消</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#town_form').on('submit', function () {
+        var select_district_value = $('#select_district').val().trim();
+        if (!select_district_value) {
+            alert('必须选择区域');
+            $('#submit_btn').button('reset');
+            return false;
+        }
+        // 角色选择的检查，必须选择
+        var town_value = $('#town').val().trim();
+        if (!town_value) {
+            alert('子区域名不能为空');
+            $('#submit_btn').button('reset');
+            return false;
+        }
+    })
+
+
+</script>
+<% include footer %>

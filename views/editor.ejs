@@ -1,0 +1,199 @@
+<% include header %>
+<% include functions/contents %>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <% if(action !== undefined && action === 'create') { %>
+                        发布文档
+                        <% }else if(action !== undefined && action === 'edit'){ %>
+                        编辑文档
+                        <% } %>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="docsPanel">
+                        <% if (typeof(action) !== 'undefined' && action === 'edit') { %>
+                        <form id="create_content_form" class="form-horizontal" method="post"
+                              action='/contents/<%= content_id %>/update'>
+                            <% } else { %>
+                            <form id="create_content_form" class="form-horizontal" method="post"
+                                  action='/contents/create'>
+                                <% } %>
+                                <div class="form-group form-inline">
+                                    <span id="category_selector">选择主目录和子目录(必选)：</span>
+                                    <select class="form-control" id="select_category" name="category">
+                                        <option value="">主目录</option>
+                                        <%
+                                        var tabValue = '';
+                                        if (typeof(category) !== 'undefined') {
+                                            tabValue = category;
+                                        }
+                                        var categories = getCategories();
+                                        categories.forEach(function (pair) {
+                                            var value = pair[0];
+                                            var text = pair[1];
+                                        %>
+                                        <option value="<%= value %>" <%= tabValue === value ? 'selected' : '' %>><%= text %></option>
+                                        <% }); %>
+                                    </select>
+                                    <select class="form-control" id="select_sub_category" name="sub_category">
+                                        <option value="">子目录</option>
+                                        <%
+                                        var tabValue = '';
+                                        var categories = [];
+                                        if (typeof(sub_category) !== 'undefined' && typeof(category) !== 'undefined') {
+                                            tabValue = sub_category;
+                                            categories = getSubCategories(category);
+                                        }
+                                        categories.forEach(function (pair) {
+                                            var value = pair[0];
+                                            var text = pair[1];
+                                        %>
+                                        <option value="<%= value %>" <%= tabValue === value ? 'selected' : '' %>><%= text %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="title" placeholder="标题...." id="title"
+                                           value="<%= typeof(content_title) !== 'undefined' && content_title || '' %>">
+                                </div>
+                                <div class="form-group">
+                                     <textarea id="textlang" name="details" data-provide="markdown"
+                                          rows="20"><%= typeof(details) !== 'undefined' && details || '' %></textarea>
+                                </div>
+                                <div class="form-group pull-right">
+                                    <button type="submit" class="btn btn-primary" id="submit_btn">提交</button>
+                                    <button type="button" class="btn btn-default" name="back"
+                                            onclick="javascript:history.back(-1);"/>
+                                    取消</button>
+                                </div>
+
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Markdown 语法参考</h3>
+                </div>
+                <div class="panel-body">
+                    <ol>
+                        <li><tt>### 单行的标题</tt></li>
+                        <li><tt>**粗体**</tt></li>
+                        <li><tt>_斜体_</tt></li>
+                        <li><tt>[内容](链接)</tt></li>
+                        <li><tt>![文字说明](图片链接)</tt></li>
+                        <li><tt>- 无序列表</tt></li>
+                        <li><tt>1. 有序列表</tt></li>
+                    </ol>
+                    <span><a href='http://www.ituring.com.cn/article/775' target='_blank'>Markdown 文档</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function ($) {
+            $.fn.markdown.messages.zh = {
+                'Bold': "粗体",
+                'Italic': "斜体",
+                'Heading': "标题",
+                'URL/Link': "链接",
+                'Image': "图片",
+                'List': "列表",
+                'Unordered List': "无序列表",
+                'Ordered List': "有序列表",
+                'Code': "代码",
+                'Quote': "引用",
+                'Preview': "预览",
+                'strong text': "粗体",
+                'emphasized text': "强调",
+                'heading text': "标题",
+                'enter link description here': "输入链接说明",
+                'Insert Hyperlink': "URL地址",
+                'enter image description here': "输入图片说明",
+                'Insert Image Hyperlink': "图片URL地址",
+                'enter image title here': "在这里输入图片标题",
+                'list text here': "这里是列表文本",
+                'code text here': "这里输入代码",
+                'quote here': "这里输入引用文本"
+            };
+
+        }(jQuery));
+        $("#textlang").markdown({language: 'zh'});
+
+        $('#create_content_form').on('submit', function () {
+            // 版块选择的检查，必须选择
+            var select_category_value = $('#select_category').val();
+            var select_sub_category_value = $('#select_sub_category').val();
+            if (!select_category_value || !select_sub_category_value) {
+                alert('必须选择一个主目录和子目录！');
+                $('#submit_btn').button('reset');
+                $('#category_selector').css('color', 'red');
+                return false;
+            }
+
+            var title_value = $('#title').val();
+            var text_value = $('#textlang').val();
+            if (!title_value || !text_value) {
+                alert('标题以及内容不能为空');
+                return false;
+            }
+        })
+
+        $('#select_category').on('change', function () {
+            var $this = $(this);
+            var value = $this.val();
+            console.log(value);
+            var main = [['train', '军事训练'],
+                ['education', '教育管理'],
+                ['defence', '国防动员']
+            ];
+
+            var train = [['plan', '通知计划'],
+                ['rule', '训练法规'],
+                ['search', '资料查询'],
+                ['exam', '训练考核']
+            ];
+
+            var education = [['plan', '通知计划'],
+                ['edu', '教育资料'],
+                ['rule', '法规命令'],
+                ['achieve', '成果交流']
+            ];
+
+            var defence = [['organization', '组织机构'],
+                ['rule', '法规政策'],
+                ['call', '兵员征集'],
+                ['potential', '基本潜力']
+            ];
+
+            var options = [];
+            "<option value='Value'>Text</option>"
+            if (value === 'train') {
+                for (var i = 0; i < train.length; i++) {
+                    options.push("<option value='" + train[i][0] + "'>" + train[i][1] + "</option>");
+                }
+            } else if (value === 'education') {
+                for (var i = 0; i < education.length; i++) {
+                    options.push("<option value='" + education[i][0] + "'>" + education[i][1] + "</option>");
+                }
+            } else if (value === 'defence') {
+                for (var i = 0; i < defence.length; i++) {
+                    options.push("<option value='" + defence[i][0] + "'>" + defence[i][1] + "</option>");
+                }
+            }
+            //插入子目录选项
+            //
+            $('#select_sub_category').empty().append("<option value=''>子目录</option>").append(options);
+        });
+    </script>
+
+<% include footer %>

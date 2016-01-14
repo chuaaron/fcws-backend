@@ -1,0 +1,103 @@
+<% include ../header %>
+<% include modal_del_user.ejs%>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="page-header">
+                <h1>
+                    用户列表
+                </h1>
+                <div class="pull-right">
+                    <a class="btn btn-primary " type="button" href="/users/new">
+                        新增用户
+                    </a >
+                </div>
+
+                <form class="form-inline" method="get">
+                    <div class="form-group">
+                        <label for="search_user_by_id">ID : </label>
+                        <input type="text" class="form-control" id="search_user_by_id" name="search" value=<%= search %>>
+                    </div>
+                    <button type="submit" class="btn btn-primary">搜索</button>
+                </form>
+            </div>
+            <nav>
+                <ul class="pager">
+                    <% var baseUrl = "/users?search="+search+"&page=" %>
+                    <% var prevPage = page > 1 ? page - 1 : 1; %>
+                    <% var nextPage = users.length > 0 ? page + 1 : page; %>
+                    <li><a href="<%= baseUrl + prevPage %>"> 前一页</a></li>
+                    <li><a href="<%= baseUrl + nextPage %>">下一页</a></li>
+                </ul>
+            </nav>
+            <table class="table table-bordered ">
+                <thead>
+                <tr class="info">
+                    <th>
+                        登录id
+                    </th>
+                    <th>
+                        全名
+                    </th>
+                    <th>
+                        级别
+                    </th>
+                    <th>
+                        描述
+                    </th>
+                    <th>
+                        区域
+                    </th>
+                    <th>
+                        子区域
+                    </th>
+                    <th>
+                       操作
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <% users.forEach(function(user, index){ %>
+                <tr>
+                    <td>
+                        <%= user.id %>
+                    </td>
+                    <td>
+                        <%= user.name %>
+                    </td>
+                    <td>
+                        <%= user.role %>
+                    </td>
+                    <td>
+                        <%= user.description %>
+                    </td>
+                    <td>
+                        <%= user.district%>
+                    </td>
+                    <td>
+                        <%= user.town%>
+                    </td>
+                    <td>
+                        <a href="users/<%=user.id%>/edit" class="edit-user btn btn-info btn-sm" role="button">编辑</a>
+                        <a href="#" class="confirm-delete-user btn btn-danger btn-sm" role="button"
+                           data-id="<%= user.id %>">删除</a>
+                    </td>
+                    <!--<td>-->
+                       <!---->
+                    <!--</td>-->
+                </tr>
+                <% }); %>
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+
+<% include ../footer %>
+

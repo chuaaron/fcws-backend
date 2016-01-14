@@ -1,0 +1,157 @@
+<% include header %>
+<% include modals/modal_del_towns.ejs%>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="page-header">
+            <h1>
+                区域管理
+            </h1>
+            <div>
+                <a class="btn btn-primary " type="button" href="/towns/new">
+                    新增子区域
+                </a>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        区域列表
+                    </h3>
+                </div>
+                <table class="table table-bordered table-hover" id="districtsTable">
+                    <tbody>
+                    <% districts.forEach(function(district, index){ %>
+                    <tr>
+                        <td>
+                            <%= district.name %>
+                        </td>
+                    </tr>
+                    <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+
+            <div class="panel panel-info" id="towns" >
+                <div class="panel-heading">
+                    <h3 class="panel-title">子区域列表</h3>
+                </div>
+                <table class="table table-bordered table-hover" id="townTable">
+                    <thead>
+                    <tr>
+                        <th>
+                            子区域名
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!--<div class="panel-footer">-->
+                    <!--<button class="btn btn-primary btn-sm" id="add_sub_category"-->
+                            <!--data-toggle="modal" data-target="#modal_add_town">添加子区域-->
+                    <!--</button>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-info" id="contacts" >
+                <div class="panel-heading">
+                    <h3 class="panel-title">通讯录列表</h3>
+                </div>
+                <table class="table table-bordered table-hover" id="contactsTable">
+                    <thead>
+                    <tr>
+                        <th>
+                            全名
+                        </th>
+                        <th>
+                            手机号
+                        </th>
+                        <th>
+                            子区域
+                        </th>
+                        <th>
+                            地址
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#districtsTable tbody tr td:first-child ').on('click', function () {
+        //set active
+        $("#districtsTable .active").removeClass("active");
+        $(this).parent().addClass('active');
+        var district = $(this).text().trim();
+
+        $.get('/towns', {
+            'district': district
+        }).done(function (towns) {
+            var trs = [];
+            for (var i = 0; i < towns.length; i++) {
+                trs.push("<tr ><td>" + towns[i] + "</td>"
+                        + "<td><a href='#' class='confirm-edit-town btn btn-info btn-sm' role='button' data-town='"+towns[i]+"'>编辑</a> "
+                        + "<a href='#' class='confirm-delete-town btn btn-danger btn-sm' role='button' data-town='"+towns[i]+"'>删除</a></td></tr>");
+            }
+//            $('#towns').show();
+            $('#contactsTable tbody').empty();
+            $('#townTable tbody').empty().append(trs);
+//            $('#contacts').hide();
+        }).error(function () {
+        });
+    });
+
+    $('#towns').on('click', '.confirm-edit-town',function (e) {
+        e.preventDefault();
+        var town = $(this).data('town');
+        var district = $('#districtsTable .active td:first-child').text().trim();
+        window.location.href='/towns/'+town+"/edit?district="+district;
+    });
+
+
+
+    $('#townTable tbody ').on('click', 'tr td:first-child', function () {
+        $("#townTable .active").removeClass("active");
+        $(this).parent().addClass('active');
+        var town = $(this).text().trim();
+        var district = $('#districtsTable .active td:first-child').text().trim();
+
+        $.get('/contacts', {
+            'district': district,
+            'town': town
+        }).done(function (contacts) {
+            console.log(contacts);
+            var trs = [];
+            for (var i = 0; i < contacts.length; i++) {
+                trs.push("<tr >"
+                        + "<td>" + contacts[i].name + "</td>"
+                        + "<td>" + contacts[i].phone_no + "</td>"
+                        + "<td>" + contacts[i].town + "</td>"
+                        + "<td>" + contacts[i].address + "</td>"
+                        + "</tr>");
+            }
+
+            $('#contactsTable tbody').empty().append(trs);
+//            $('#contacts').show();
+        }).error(function () {
+        });
+    });
+
+</script>
+
+<% include footer %>

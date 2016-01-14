@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include partials/head %>
+</head>
+
+<header>
+
+</header>
+
+<body class="container">
+<%#
+if (signupError) { %>
+<!--<div class="alert alert-danger" role="alert">-->
+    <!--<%#= signupError %>-->
+<!--</div>-->
+
+<%# } %>
+
+<main>
+    <% if (success) { %>
+    <div class="alert alert-success" role="success">
+        <%= success %>
+    </div>
+    <% } %>
+    <% if (error) { %>
+    <div class="alert alert-danger" role="error">
+        <%= error %>
+    </div>
+    <% } %>
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="jumbotron">
+
+                <h1><img src="/img/logo.png" class="pull-left" alt="logo" width="80" height="90"
+                         style="margin-right: 20px;">
+                    欢迎使用凤城卫士后台管理系统</h1>
+
+                <p>仅管理员可以使用</p>
+                <!--<p><a class="btn btn-primary btn-lg" href="#" role="button">更多</a></p>-->
+            </div>
+            <div class="row">
+                <form class="form center-block form-horizontal" method="post" style="width:40%">
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">账号</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="id" class="form-control" id="id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">口令</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">登录</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include footer %>

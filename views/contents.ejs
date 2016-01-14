@@ -1,0 +1,141 @@
+<% include header %>
+<% include modals/modal_del_content.ejs %>
+<% include modals/modal_show_content.ejs %>
+<% include functions/contents.ejs %>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="page-header">
+                <h1>
+                    文档列表
+                </h1>
+                <div class="pull-right">
+                    <a class="btn btn-primary" href="/contents/new">新建文档</a>
+                </div>
+                <form class="form-inline" method="get" id="search_content_form">
+                    <div class="form-group form-inline">
+                        <select class="form-control" id="select_category" name="category">
+                            <option value="">主目录</option>
+                            <option value="train">军事训练</option>
+                            <option value="education">教育管理</option>
+                            <option value="defence">国防动员</option>
+                        </select>
+                        <select class="form-control" id="select_sub_category" name="sub_category">
+                            <option value="">子目录</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" >搜索</button>
+                </form>
+
+            </div>
+
+            <table class="table table-bordered ">
+                <thead>
+                <tr class="info">
+                    <th>
+                       标题
+                    </th>
+                    <th>
+                       目录
+                    </th>
+                    <th>
+                       子目录
+                    </th>
+                    <th>
+                        创建时间
+                    </th>
+                    <th>
+                       操作
+                    </th>
+                    <!--<th>-->
+                        <!--详情-->
+                    <!--</th>-->
+                    <!--<th>-->
+                        <!--删除-->
+                    <!--</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <% contents.forEach(function(content, index){ %>
+                <tr>
+                    <td>
+                        <%= content.title %>
+                    </td>
+                    <td>
+                        <%= getChCategory(content.category) %>
+                    </td>
+                    <td>
+                        <%= getChSubCategory(content.category,content.sub_category) %>
+                    </td>
+                    <td>
+                        <%= content.create_at_ago() %>
+                    </td>
+                    <td>
+                        <a href="/contents/<%=content.id%>/editor" class="btn btn-info mini" role="button">编辑</a>
+                        <a href="#" class="markdown_render btn btn-success mini" role="button"
+                           data-detail="<%= content.details.trim() %>">详情</a>
+                        <a href="#" class="confirm-delete-content btn btn-danger mini" role="button"
+                           data-id="<%= content.id %>">删除</a>
+                    </td>
+
+                </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+
+    $('#select_category').on('change', function () {
+        var $this = $(this);
+        var value = $this.val();
+        console.log(value);
+
+        var main = [['train', '军事训练'],
+            ['education', '教育管理'],
+            ['defence', '国防动员']
+        ];
+
+        var train = [['plan', '通知计划'],
+            ['rule', '训练法规'],
+            ['search', '资料查询'],
+            ['exam', '训练考核']
+        ];
+
+        var education = [['plan', '通知计划'],
+            ['edu', '教育资料'],
+            ['rule', '法规命令'],
+            ['achieve', '成果交流']
+        ];
+
+        var defence = [['organization', '组织机构'],
+            ['rule', '法规政策'],
+            ['call', '兵员征集'],
+            ['potential', '基本潜力']
+        ];
+        var options = [];
+        if (value === 'train') {
+            for (var i = 0; i < train.length; i++) {
+                options.push("<option value='" + train[i][0] + "'>" + train[i][1] + "</option>");
+            }
+        } else if (value === 'education') {
+            for (var i = 0; i < education.length; i++) {
+                options.push("<option value='" + education[i][0] + "'>" + education[i][1] + "</option>");
+            }
+        } else if (value === 'defence') {
+            for (var i = 0; i < defence.length; i++) {
+                options.push("<option value='" + defence[i][0] + "'>" + defence[i][1] + "</option>");
+            }
+        }
+        //插入子目录选项
+        //
+        $('#select_sub_category').empty().append("<option value=''>子目录</option>").append(options);
+    });
+</script>
+
+<% include footer %>

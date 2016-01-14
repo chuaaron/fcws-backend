@@ -1,0 +1,71 @@
+<% include header %>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        修改密码
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form center-block form-horizontal" method="post" style="width:40%" id="chpwd_form">
+                        <div class="form-group">
+                            <label for="password" class="col-sm-2 control-label">原密码</label>
+
+                            <div class="col-sm-10">
+                                <input type="password" name="password" class="form-control" id="password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new_password" class="col-sm-2 control-label">新密码</label>
+
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="new_password" name="new_password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="repeat_password" class="col-sm-2 control-label">重复</label>
+
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="repeat_password" name="repeat_password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" id="submit_btn">修改</button>
+                                <button type="button" class="btn btn-default" name="back"
+                                        onclick="javascript:history.back(-1);"/>取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#chpwd_form').on('submit', function () {
+        // 版块选择的检查，必须选择
+        var password_value = $('#password').val();
+        var repeat_password_value = $('#repeat_password').val();
+        var new_password_value = $('#new_password').val();
+        if (!password_value || !repeat_password_value || !new_password_value) {
+            alert('表单项不完整');
+            $('#submit_btn').button('reset');
+            return false;
+        }
+
+        if (new_password_value !== repeat_password_value) {
+            alert('两次输入密码不一致');
+            return false;
+        }
+    })
+
+    //send ajax request
+</script>
+
+<% include footer %>

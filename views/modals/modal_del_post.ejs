@@ -1,0 +1,52 @@
+<div id="modal_del_post" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h3 id="myModalLabel">删除情报</h3>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+                <button data-dismiss="modal" class="btn btn-danger" id="btnYes_post">确认</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<script>
+    $(function () {
+        $('#modal_del_post').on('show.bs.modal', function (event) {
+            var id = $(this).data('id');
+            $('#modal_del_post .modal-dialog .modal-content .modal-body p').html("确定删除情报" + '<b>' + id + '</b>' + ' 吗?');
+        })
+
+        $('.confirm-delete-post').on('click', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            $('#modal_del_post').data('id', id).modal('show');
+        });
+
+        $('#btnYes_post').click(function () {
+// handle deletion here
+            var post_id = $('#modal_del_post').data('id');
+            $.ajax({
+                url: '/posts/' + post_id,
+                type: 'DELETE',
+                success: function (result) {
+                    location.reload();
+                },
+                error: function (request) {
+                    location.reload();
+                }
+            });
+
+            $('#modal_del_post').modal('hide');
+        });
+    });
+
+</script>

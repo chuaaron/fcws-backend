@@ -1,0 +1,79 @@
+<% include header %>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        应用更新
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form center-block form-horizontal" method="post" style="width:40%" id="chpwd_form">
+                        <div class="form-group">
+                            <label for="url" class="col-sm-2 control-label">下载地址</label>
+
+                            <div class="col-sm-10">
+                                <input type="url" name="url" class="form-control" id="url">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="version" class="col-sm-2 control-label">版本号</label>
+
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="version" name="version">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apk" class="col-sm-2 control-label">上传Apk</label>
+                            <div class="col-sm-10">
+                                <input type="file" class="form-control file" id="apk" name="apk">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="update_info" class="col-sm-2 control-label">版本更新信息</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" name="update_info"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" id="submit_btn">更新</button>
+                                <button type="button" class="btn btn-default" name="back"
+                                        onclick="javascript:history.back(-1);"/>取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#chpwd_form').on('submit', function () {
+        // 版块选择的检查，必须选择
+        var password_value = $('#password').val();
+        var repeat_password_value = $('#repeat_password').val();
+        var new_password_value = $('#new_password').val();
+        if (!password_value || !repeat_password_value || !new_password_value) {
+            alert('表单项不完整');
+            $('#submit_btn').button('reset');
+            return false;
+        }
+
+        if (new_password_value !== repeat_password_value) {
+            alert('两次输入密码不一致');
+            return false;
+        }
+    })
+
+    //send ajax request
+</script>
+
+<% include footer %>
