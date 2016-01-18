@@ -68,7 +68,7 @@ module.exports.getUsersByName = function (name, callback) {
 };
 
 module.exports.deleteUserById = function (id, callback) {
-    UserModel.findOneAndRemove({id:id}, function (err, user) {
+    UserModel.findOneAndRemove({id: id}, function (err, user) {
         if (err) {
             return callback(err);
         } else {
@@ -77,8 +77,8 @@ module.exports.deleteUserById = function (id, callback) {
     });
 };
 
-module.exports.serarchUserByRegExp = function(regexp,callback){
-    UserModel.find({name: regexp}).sort({name : 1}).exec(function(err,users){
+module.exports.serarchUserByRegExp = function (regexp, callback) {
+    UserModel.find({name: regexp}).sort({name: 1}).exec(function (err, users) {
         if (err) {
             return callback(err);
         } else {
@@ -87,17 +87,68 @@ module.exports.serarchUserByRegExp = function(regexp,callback){
     });
 }
 
-//TODO
-module.exports.getBelongsByRoleAndArea = function(role,district,callback){
+// for role 1 - 3 , get their belongs
+module.exports.getUsersByRole = function (role, callback) {
     //if role not right
-    if(role === undefined || role > 6){
+    if (role === undefined || role > 6 || role < 2) {
         var error = {};
-        error.message = "role not in "
-      callback(null,null);
+        error.message = "role not defined "
+        callback(error, null);
     }
 
-    if(district === undefined || district < 0 || district > 7){
-        callback(null,null);
+    var ep = new eventproxy();
+
+    UserModel.find({"role": role}).sort({id: 1}).exec(ep.done('users'));
+
+    ep.all('users', function (users) {
+        callback(null, users);
+    });
+};
+
+//for role 4 -5 , get their belongs
+module.exports.getUsersByRoleAndArea = function (role, district, callback) {
+    //if role not right
+    if (role === undefined || role > 6 || role < 5) {
+        var error = {};
+        error.message = "role not defined "
+        callback(error, null);
+    }
+
+    if (district === undefined || district < 0 || district > 7) {
+        var error = {};
+        error.message = "district not defined";
+        callback(error, null);
+    }
+
+    var ep = new eventproxy();
+
+    if (role === 5 || role === 6) {
+        UserModel.find({"role": role, "district": district}).sort({id: 1}).exec(ep.done("users"));
+    } else {
+        var users = [];
+        //callback(null, users);
+        ep.emit('users', users);
+    }
+
+    ep.all('users', function (users) {
+        callback(null, users);
+    });
+};
+
+
+//TODO
+module.exports.getBelongsByRoleAndArea = function (role, district, callback) {
+    //if role not right
+    if (role === undefined || role > 6 || role < 1) {
+        var error = {};
+        error.message = "role not right"
+        callback(error, null);
+    }
+
+    if (district === undefined || district < 0 || district > 7) {
+        var error = {};
+        error.message = "district not defined";
+        callback(error, null);
     }
 
     var ep = new eventproxy();
@@ -108,11 +159,36 @@ module.exports.getBelongsByRoleAndArea = function(role,district,callback){
         UserModel.find({"role": role + 1, "district": district}).sort({id: 1}).exec(ep.done("users"));
     } else {
         var users = [];
-        callback(null,users);
-        //ep.emit('users',users);
+        //callback(null, users);
+        ep.emit('users', users);
     }
 
     ep.all('users', function (users) {
-        callback(null,users);
+        callback(null, users);
     });
+};
+
+
+//TODO
+module.exports.getLevlesByRole = function (role, callback) {
+    console.log(role);
+    if (role === undefined || role > 6) {
+        var error = {};
+        error.message = "role not in "
+        callback(error, null);
+    }
+
+    var levels = [
+        {level: 1, description: "司令员,政治委员"},
+        {level: 2, description: "副司令员,政治部主任,后勤部部长"},
+        {level: 3, description: "参谋,干事,助理员,军分区作战值班室"},
+        {level: 4, description: "人武部部长,政委"},
+        {level: 5, description: "人武部副部长,军事科参谋,作战值班室"},
+        {level: 6, description: "民兵"},
+    ];
+
+    var result = _.slice(levels, role, levels.length);
+    callback(null, result);
+
+
 };

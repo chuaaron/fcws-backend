@@ -26,19 +26,13 @@ router.get('/users/details',passport.authenticate('bearer', { session: false }),
 
 router.get('/users/belongs',passport.authenticate('bearer', { session: false }),userController.belong);
 
+router.get('/users/levels',passport.authenticate('bearer', { session: false }),userController.level);
+
 router.get('/posts',passport.authenticate('bearer', { session: false }),postController.list);
 
 router.get('/posts/:id',passport.authenticate('bearer', { session: false }),postController.show);
 
-// router.post('/posts/:id/likes',passport.authenticate('bearer', { session: false }),postController.like);
-
-// router.delete('/posts/:id/likes',passport.authenticate('bearer', { session: false }),postController.unlike);
-
 router.post('/posts',passport.authenticate('bearer', { session: false }),postController.create);
-
-router.post('/upload',passport.authenticate('bearer', { session: false }),upload.single('photo') ,postController.upload);
-
-router.get('/update',passport.authenticate('bearer', { session: false }) ,updateController.update);
 
 router.delete('/posts/:id',passport.authenticate('bearer', { session: false }),postController.delete);
 
@@ -47,6 +41,10 @@ router.post('/replys',passport.authenticate('bearer', { session: false }),replyC
 router.delete('/replys/:id',passport.authenticate('bearer', { session: false }),replyController.delete);
 
 
+router.post('/upload',passport.authenticate('bearer', { session: false }),upload.single('photo') ,postController.upload);
+
+router.get('/update',passport.authenticate('bearer', { session: false }) ,updateController.update);
+
 //router.get('/belongs',passport.authenticate('bearer', { session: false }),postController.create);
 
 //router.get('/contacts',passport.authenticate('bearer', { session: false }),postController.create);
@@ -54,6 +52,10 @@ router.delete('/replys/:id',passport.authenticate('bearer', { session: false }),
 //router.post('/messages',passport.authenticate('bearer', { session: false }),messageController.create);
 
 router.post('/messages/broadcast',passport.authenticate('bearer', { session: false }),messageController.broadcast);
+
+router.post('/messages/levels',passport.authenticate('bearer', { session: false }),messageController.levels);
+
+router.post('/messages/reply',passport.authenticate('bearer', { session: false }),messageController.reply);
 
 router.get('/messages',passport.authenticate('bearer', { session: false }),messageController.list);
 
@@ -83,6 +85,9 @@ router.get('/contents/subcategory', passport.authenticate('bearer', {session: fa
 
 router.get('/contents/:id', passport.authenticate('bearer', {session: false}), contentController.getContentsById);
 
+// router.post('/posts/:id/likes',passport.authenticate('bearer', { session: false }),postController.like);
+
+// router.delete('/posts/:id/likes',passport.authenticate('bearer', { session: false }),postController.unlike);
 
 
 module.exports = router;

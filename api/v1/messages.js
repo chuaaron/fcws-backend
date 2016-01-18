@@ -49,6 +49,57 @@ var _ = require('lodash');
 //    });
 //};
 
+
+
+// here we should examine the sender role and reciever role
+module.exports.levels = function (req, res, next) {
+    var sender_role = req.user.role;
+    var sender_district = req.user.district;
+    var sender_id = req.user.id;
+    var content = req.body.content;
+    var selection = req.body.selection || [];
+
+    if (!content) {
+        return res.status(422).send({error_msg: "命令内容不能为空"});
+    }
+
+    if (selection.length === 0) {
+        return res.status(422).send({error_msg: "接受者不能为空"});
+    }
+
+    var ep = new eventproxy();
+
+    selection.forEach(function (level) {
+        var receiver_role = level.level;
+        MessageProxy.BroadLevel(sender_id, sender_district,sender_role,receiver_role, content, ep.done('message'));
+
+    });
+
+    ep.after('message', selection.length, function () {
+        //too big ,not to send messages
+        res.status(200).json({success: true});
+    });
+}
+
+
+module.exports.reply = function (req, res, next) {
+    var sender_id = req.user.id;
+    var content = req.body.content;
+    var receiver_id= req.body.receiver_id;
+
+    if (!content) {
+        return res.status(422).send({error_msg: "回复内容不能为空"});
+    }
+    
+    MessageProxy.newAndSave(sender_id, receiver_id, content, function(err,message){
+        if(err){
+           return  next(err);
+        }
+        res.status(200).json({success: true});
+    });
+}
+
+// here we should examine the sender role and reciever role
 module.exports.broadcast = function (req, res, next) {
     //var role = req.user.role;
     //var district = req.user.district;
@@ -60,7 +111,7 @@ module.exports.broadcast = function (req, res, next) {
         return res.status(422).send({error_msg: "命令内容不能为空"});
     }
 
-    if(selection.length === 0 ){
+    if (selection.length === 0) {
         return res.status(422).send({error_msg: "接受者不能为空"});
     }
 
@@ -71,11 +122,10 @@ module.exports.broadcast = function (req, res, next) {
         MessageProxy.newAndSave(sender_id, receiver_id, content, ep.done('message'));
     });
 
-    ep.after('message', selection.length, function (messages) {
+    ep.after('message', selection.length, function (err,messages) {
         //too big ,not to send messages
         res.status(200).json({success: true});
     });
-
 
 
     //UserProxy.getBelongsByRoleAndArea(role, district, function (err, users) {
@@ -118,28 +168,28 @@ module.exports.unread = function (req, res, next) {
 
 //TODO: test
 module.exports.list = function (req, res, next) {
-    //console.log("auth success: " + req.user.id);
     var receiver_id = req.user.id;
 
     var ep = new eventproxy();
     ep.fail(next);
 
-    ep.all('has_read','has_not_read',function(has_read_messages,hasnot_read_messages){
+    ep.all('has_read', 'has_not_read', function (has_read_messages, hasnot_read_messages) {
         var messages = {};
         messages.has_read_messages = has_read_messages;
         messages.hasnot_read_messages = hasnot_read_messages;
-        console.log(messages);
         res.status(200).json(messages);
     });
-    MessageProxy.getMessagesById(receiver_id,true,ep.done('has_read'));
-    MessageProxy.getMessagesById(receiver_id,false,ep.done('has_not_read'));
+    MessageProxy.getMessagesById(receiver_id, true, ep.done('has_read'));
+    MessageProxy.getMessagesById(receiver_id, false, ep.done('has_not_read'));
 };
 
 
 //TODO: test
 module.exports.markall = function (req, res, next) {
-    console.log('markall');
-    MessageModel.update({receiver_id: req.user.id, has_read: false}, {has_read: true},{multi: true}, function (err, messages) {
+    MessageModel.update({
+        receiver_id: req.user.id,
+        has_read: false
+    }, {has_read: true}, {multi: true}, function (err, messages) {
         if (err) {
             next(err);
         } else {

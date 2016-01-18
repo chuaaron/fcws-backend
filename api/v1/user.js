@@ -15,7 +15,8 @@ module.exports.auth = function (req, res, next) {
         //user.accessToken = uuid.v4();
         //user.save();
         user = _.pick(user, ['id', 'role', 'description',
-            'name', 'accessToken']);
+            'name','district' ,'accessToken']);
+        //console.log(user);
         res.status(200).json(user);
     }
 };
@@ -85,6 +86,25 @@ module.exports.belong = function (req, res, next) {
                 return user;
             });
             res.status(200).json(users);
+        }
+    });
+};
+
+module.exports.level= function (req, res, next) {
+    var user = req.user;
+    var role = user.role;
+    var district = user.district ;
+    console.log(role + " " + district);
+
+    UserProxy.getLevlesByRole(role,function(err,levels){
+        if(err){
+            next(err);
+        }else {
+            //users = users.map(function (user) {
+            //    user = _.pick(user, ['id', 'name', 'description','district','town']);
+            //    return user;
+            //});
+            res.status(200).json(levels);
         }
     });
 };
