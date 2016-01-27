@@ -171,7 +171,7 @@ module.exports.getUserById = function (req, res, next) {
 
 module.exports.uploadAvatar = function (req, res, next) {
     var user = req.user;
-    //console.log(req.body.image);
+    console.log(req.body.image);
     //user.avatar = new Buffer(req.body.image,'base64');
     user.avatar = req.body.image;
     user.save(function(err,user){
