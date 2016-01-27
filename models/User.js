@@ -13,9 +13,10 @@ var UserSchema = new mongoose.Schema({
 	town: String,
 	description: String,
 	role: Number,
-	address: String, 
+	address: String,
 	phone_no: String,
 	accessToken: String,
+	avatar: String
 }, { id: false });
 
 //area:
@@ -28,6 +29,5 @@ options.errorMessages.IncorrectPasswordError = '用户名或密码错误!';
 options.errorMessages.IncorrectUsernameError = '用户名或密码错误!';
 
 UserSchema.plugin(passportLocalMongoose,options);
-//UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', UserSchema);

@@ -21,7 +21,7 @@ module.exports.list = function (req, res, next) {
     ep.all('posts', function (posts) {
         posts.forEach(function (post) {
             UserModel.findOne({id: post.author_id}, ep.done(function (author) {
-                post.author = _.pick(author, ['name','role','description']);
+                post.author = _.pick(author, ['name','role','description','avatar']);
                 ep.emit('author');
             }))
         })
@@ -47,7 +47,7 @@ module.exports.show = function (req, res, next) {
 
         replies.forEach(function (reply) {
             UserModel.findOne({id: reply.author_id}).exec(ep.done(function (author) {
-                reply.author = _.pick(author, ['name','role','description']);
+                reply.author = _.pick(author, ['name','role','description','avatar']);
                 ep.emit('author');
             }));
         });
@@ -67,7 +67,7 @@ module.exports.show = function (req, res, next) {
         }
         post.replies = replies || [];
         UserModel.findOne({id: post.author_id}).exec(ep.done(function (author) {
-            post.author = _.pick(author, ['name','role','description']);
+            post.author = _.pick(author, ['name','role','description','avatar']);
             ep.emit('author');
         }));
 
