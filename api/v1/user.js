@@ -86,7 +86,7 @@ module.exports.belong = function (req, res, next) {
             next(err);
         } else {
             users = users.map(function (user) {
-                user = _.pick(user, ['id', 'name', 'description', 'district', 'town']);
+                user = _.pick(user, ['id', 'name', 'description', 'district', 'town','avatar']);
                 return user;
             });
             res.status(200).json(users);

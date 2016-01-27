@@ -58,7 +58,7 @@ module.exports.getMessagesById = function (receiver_id, has_read, callback) {
                 if (err) {
                     return callback(err);
                 }
-                message.sender = _.pick(user, 'id','name', 'description');
+                message.sender = _.pick(user, 'id','name', 'description','avatar');
                 ep.emit('user');
             });
         })
