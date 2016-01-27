@@ -24,7 +24,11 @@ router.post('/users/changePassword',passport.authenticate('local', { session: fa
 
 router.post('/users/avatar',passport.authenticate('bearer', { session: false }),userController.uploadAvatar);
 
-router.get('/users/details',passport.authenticate('bearer', { session: false }),userController.detail);
+//router.get('/users/details',passport.authenticate('bearer', { session: false }),userController.detail);
+
+router.get('/users/recentposts',passport.authenticate('bearer', { session: false }),userController.recentposts);
+
+router.get('/users/recentreplies',passport.authenticate('bearer', { session: false }),userController.recentreplies);
 
 router.get('/users/belongs',passport.authenticate('bearer', { session: false }),userController.belong);
 

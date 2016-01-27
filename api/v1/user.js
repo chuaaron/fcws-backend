@@ -1,6 +1,6 @@
 var UserModel = require('../../models/User');
 var PostModel = require('../../models/Post');
-var Reply = require('../../models/Reply');
+var ReplyModel = require('../../models/Reply');
 var UserProxy = require('../../proxy/user.js');
 var tools = require('../../common/tools');
 var eventproxy = require('eventproxy');
@@ -30,37 +30,51 @@ module.exports.changepw = function (req, res, next) {
     });
 };
 
-module.exports.detail = function (req, res, next) {
-    var user = req.user;
-    var ep = new eventproxy();
-    var userid = user.id;
-
-    ep.fail(next);
-
-    ep.all("recent_posts", "recent_replies", function (recent_posts, recent_replies) {
-        user = _.pick(user, ['id', 'role', 'description', 'name','avatar']);
-        user.recent_posts = recent_posts;
-        user.recent_replies = recent_replies;
-        res.status(200).json(user);
-    });
-
+module.exports.recentposts = function (req,res,next) {
     //get posts of this user; limited to 5 posts
-    PostModel.find({author_id: userid}).sort({create_at: -1}).limit(recentCount).exec(ep.done(function (posts) {
+    PostModel.find({author_id: req.user.id}).sort({create_at: -1}).limit(recentCount).exec(function (err,posts) {
+        if(err){
+            return next(err);
+        }
         posts = posts.map(function (post) {
             return _.pick(post, ['_id', 'author_id', 'content', 'important', 'create_at']);
         });
-        ep.emit("recent_posts", posts);
-    }));
+        res.status(200).json(posts);
+    });
+}
 
+module.exports.recentreplies = function (req,res,next) {
     //get replies of this user; limited to 5 replies
-    Reply.find({author_id: userid}).sort({create_at: -1}).limit(recentCount).exec(ep.done(function (replies) {
+    ReplyModel.find({author_id: req.user.id}).sort({create_at: -1}).limit(recentCount).exec(function (err,replies) {
+        if(err){
+            return next(err);
+        }
         replies = replies.map(function (post) {
             return _.pick(post, ['_id', 'author_id', 'post_id', 'content', 'important', 'create_at', 'author']);
         });
-        ep.emit("recent_replies", replies);
-    }));
+        res.status(200).json(replies) ;
+    });
+}
 
-};
+//module.exports.detail = function (req, res, next) {
+//    var user = req.user;
+//    var ep = new eventproxy();
+//    var userid = user.id;
+//
+//    ep.fail(next);
+//
+//    ep.all("recent_posts", "recent_replies", function (recent_posts, recent_replies) {
+//        user = _.pick(user, ['id', 'role', 'description', 'name','avatar']);
+//        user.recent_posts = recent_posts;
+//        user.recent_replies = recent_replies;
+//        res.status(200).json(user);
+//    });
+//
+//
+//
+
+//
+//};
 
 module.exports.belong = function (req, res, next) {
     var user = req.user;
@@ -157,13 +171,13 @@ module.exports.getUserById = function (req, res, next) {
 
 module.exports.uploadAvatar = function (req, res, next) {
     var user = req.user;
-    console.log(req.body.image);
+    //console.log(req.body.image);
     //user.avatar = new Buffer(req.body.image,'base64');
     user.avatar = req.body.image;
     user.save(function(err,user){
         if(err){
             return next(err);
         }
-        res.status(200).send(user);
+        res.status(200).send(user.avatar);
     });
 }
