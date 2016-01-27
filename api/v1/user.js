@@ -117,7 +117,7 @@ module.exports.getUsersByArea = function (req, res, next) {
             return next(err);
         } else {
             users = users.map(function (user) {
-                user = _.pick(user, ['id', 'name', 'phone_no', 'address']);
+                user = _.pick(user, ['id', 'name', 'phone_no', 'address','avatar']);
                 return user;
             });
             res.status(200).json(users);
