@@ -22,6 +22,8 @@ router.get('/accesstoken', passport.authenticate('bearer', { session: false }), 
 
 router.post('/users/changePassword',passport.authenticate('local', { session: false }),userController.changepw);
 
+router.post('/users/avatar',passport.authenticate('bearer', { session: false }),userController.uploadAvatar);
+
 router.get('/users/details',passport.authenticate('bearer', { session: false }),userController.detail);
 
 router.get('/users/belongs',passport.authenticate('bearer', { session: false }),userController.belong);
