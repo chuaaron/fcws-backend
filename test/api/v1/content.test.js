@@ -16,8 +16,7 @@ describe('test /api/v1/contents.test.js', function () {
         });
     });
 
-    describe('test post /api/v1/contents', function () {
-
+    describe('test get /api/v1/contents', function () {
         var mockContent;
         before(function (done) {
             support.createContent(function (err, content) {
@@ -29,7 +28,7 @@ describe('test /api/v1/contents.test.js', function () {
 
         it('should get content details after markdown render', function (done) {
             request.get('/api/v1/contents/' + mockContent.id)
-                .send({access_token: mockUser.accessToken})
+                .query({access_token: mockUser.accessToken})
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (err, res) {
@@ -42,7 +41,7 @@ describe('test /api/v1/contents.test.js', function () {
 
         it('should get content created before in its category and subcategory', function (done) {
             request.get('/api/v1/contents/subcategory')
-                .send({access_token: mockUser.accessToken,
+                .query({access_token: mockUser.accessToken,
                     category: mockContent.category,
                     sub_category : mockContent.sub_category
                 })
@@ -52,7 +51,7 @@ describe('test /api/v1/contents.test.js', function () {
                     should.not.exists(err);
                     var contents = res.body;
                     contents.should.be.an.Array;
-                    contents.length.should.be.equal(1);
+                    contents.length.should.not.be.equal(0);
                     done();
                 });
         });

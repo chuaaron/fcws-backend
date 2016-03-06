@@ -78,29 +78,29 @@ describe('test/api/v1/user.test.js', function () {
         })
     });
 
-    describe('test get /api/v1/users/details', function (done) {
-        var mockUser;
-        before(function (done) {
-            support.createUser(function (err, user) {
-                if (err) return done(err);
-                mockUser = user;
-                done();
-            });
-        });
+    // describe('test get /api/v1/users/details', function (done) {
+    //     var mockUser;
+    //     before(function (done) {
+    //         support.createUser(function (err, user) {
+    //             if (err) return done(err);
+    //             mockUser = user;
+    //             done();
+    //         });
+    //     });
 
-        it('should return detail info of user', function (done) {
-            request.get('/api/v1/users/details')
-                .send({access_token: mockUser.accessToken})
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function (err, res) {
-                    should.not.exists(err);
-                    res.body.should.have.property('recent_posts');
-                    res.body.should.have.property('recent_replies');
-                    done();
-                });
-        })
-    });
+    //     it('should return detail info of user', function (done) {
+    //         request.get('/api/v1/users/details')
+    //             .send({access_token: mockUser.accessToken})
+    //             .expect('Content-Type', /json/)
+    //             .expect(200)
+    //             .end(function (err, res) {
+    //                 should.not.exists(err);
+    //                 res.body.should.have.property('recent_posts');
+    //                 res.body.should.have.property('recent_replies');
+    //                 done();
+    //             });
+    //     })
+    // });
 
     describe('test get /api/v1/users/belongs', function (done) {
         var mockUser;

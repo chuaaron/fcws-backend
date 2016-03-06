@@ -1,5 +1,6 @@
 var UserProxy = require('../../proxy/user');
 var PostProxy = require('../../proxy/post');
+var ContentProxy  = require('../../proxy/content.js');
 var ReplyProxy = require('../../proxy/reply');
 var UserModel = require('../../models/User');
 var _  = require('lodash');
@@ -55,14 +56,14 @@ var pickSubCategory = function(category){
     return sub_category;
 };
 
-module.exports.createContent = function (author_id, callback) {
+module.exports.createContent = function (callback) {
     var key = new Date().getTime() + "_" + randomInt();
     var title = 'title_' + key;
     var category = _.sample(main);
     var sub_category  = pickSubCategory(category);
     var details = '###Hello,Calvin post content ' + key;
 
-    PostProxy.newAndSave(title,category,sub_category,details,callback);
+    ContentProxy.newAndSave(title,category,sub_category,details,callback);
 };
 
 
