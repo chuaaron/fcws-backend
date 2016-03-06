@@ -16,7 +16,7 @@ describe('test /api/v1/contents.test.js', function () {
         });
     });
 
-    describe('test get /api/v1/contents', function () {
+    describe('test /api/v1/contents', function () {
         var mockContent;
         before(function (done) {
             support.createContent(function (err, content) {
@@ -52,6 +52,23 @@ describe('test /api/v1/contents.test.js', function () {
                     var contents = res.body;
                     contents.should.be.an.Array;
                     contents.length.should.not.be.equal(0);
+                    done();
+                });
+        });
+
+        it('should get content by limit', function (done) {
+            var limit = 5;
+            request.get('/api/v1/contents')
+                .query({access_token: mockUser.accessToken,
+                        limit: limit
+                })
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    var contents = res.body;
+                    contents.should.be.an.Array;
+                    contents.length.should.not.be.above(limit);
                     done();
                 });
         });
