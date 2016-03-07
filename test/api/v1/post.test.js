@@ -90,6 +90,22 @@ describe('test /api/v1/post.test.js', function () {
         });
     });
 
+    describe('test post  /api/v1/upload',function(){
+        it('should not get upload file respond when file is empty', function (done) {
+            request.post('/api/v1/upload/')
+                .send({
+                    access_token: mockUser.accessToken,
+                })
+                .expect('Content-Type', /text/)
+                .expect(404)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    // res.body._id.should.equal(mockPost.id);
+                    done();
+                });
+        });
+    });
+
     describe('test delete /api/v1/posts/:id',function(){
         var mockPost;
         var anotherMockUser;
