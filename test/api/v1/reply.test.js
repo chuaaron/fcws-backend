@@ -33,8 +33,7 @@ describe('test /api/v1/reply.test.js', function () {
                 .expect(200)
                 .end(function (err, res) {
                     should.not.exists(err);
-                    res.body.author_id.should.equal(mockUser.id);
-                    res.body.post_id.should.equal(mockPost.id);
+                    res.body.success.should.be.true;
                     done();
                 });
         });

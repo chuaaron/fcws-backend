@@ -30,17 +30,17 @@ describe('test /api/v1/post.test.js', function () {
                 });
         });
 
-        it('should not create new post when content is empty', function (done) {
-            request.post('/api/v1/posts')
-                .send({access_token: mockUser.accessToken,content: ""})
-                .expect('Content-Type', /json/)
-                .expect(422)
-                .end(function (err, res) {
-                    should.not.exists(err);
-                    res.body.error_msg.should.containEql("内容不能为空");
-                    done();
-                });
-        });
+        // it('should not create new post when content is empty', function (done) {
+        //     request.post('/api/v1/posts')
+        //         .send({access_token: mockUser.accessToken,content: ""})
+        //         .expect('Content-Type', /json/)
+        //         .expect(422)
+        //         .end(function (err, res) {
+        //             should.not.exists(err);
+        //             res.body.error_msg.should.containEql("内容不能为空");
+        //             done();
+        //         });
+        // });
     });
 
     describe('test get /api/v1/posts',function()
@@ -85,6 +85,22 @@ describe('test /api/v1/post.test.js', function () {
                 .end(function (err, res) {
                     should.not.exists(err);
                     res.body._id.should.equal(mockPost.id);
+                    done();
+                });
+        });
+    });
+
+    describe('test post  /api/v1/upload',function(){
+        it('should not get upload file respond when file is empty', function (done) {
+            request.post('/api/v1/upload/')
+                .send({
+                    access_token: mockUser.accessToken,
+                })
+                .expect('Content-Type', /text/)
+                .expect(404)
+                .end(function (err, res) {
+                    should.not.exists(err);
+                    // res.body._id.should.equal(mockPost.id);
                     done();
                 });
         });

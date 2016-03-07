@@ -25,12 +25,12 @@ module.exports.getContentsById = function (_id, callback) {
 
 // create_at  is  saved  as  default
 module.exports.newAndSave = function(title, category, sub_category, details, callback){
+
     var content = new ContentModel();
     content.title = title;
     content.category = category;
     content.sub_category = sub_category;
     content.details = details;
-
     content.save(callback);
 };
 

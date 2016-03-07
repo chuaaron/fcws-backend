@@ -102,6 +102,9 @@ module.exports.upload = function (req, res, next) {
     //check if the files are empty
     //var urls = _.pluck(req.file,'path');
     //var base_url    = config.upload.url;
+    if(!req.file){
+       return  res.status(404).send("error file not defined");
+    }
     var filename= req.file.filename;
     console.log(filename);
     res.status(200).json({filename: filename});
