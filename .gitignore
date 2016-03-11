@@ -31,3 +31,5 @@ node_modules
 assets
 
 .idea
+
+bin/init_users.js
